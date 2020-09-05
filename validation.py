@@ -106,5 +106,4 @@ if __name__ == '__main__':
                         help='path to pretrained weights')
     cfgs = parser.parse_args()
 
-    cfgs.pretrained = not cfgs.no_pretrained
     main(cfgs)
