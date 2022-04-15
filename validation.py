@@ -74,6 +74,10 @@ def main(args):
         n_worker=args.workers, valid_size=None)
 
     model = NSGANetV2.build_from_config(net_config)
+    try:
+        model.load_state_dict(torch.load(args.pretrained, map_location='cpu'))
+    except:
+        model.load_state_dict(torch.load(args.pretrained, map_location='cpu')['state_dict'])
 
     param_count = sum([m.numel() for m in model.parameters()])
     logging.info('Model created, param count: %d' % param_count)

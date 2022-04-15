@@ -1,6 +1,7 @@
 from timm.models.layers import drop_path
-from ofa.imagenet_codebase.modules.layers import *
-from ofa.imagenet_codebase.networks import MobileNetV3
+from ofa.utils.layers import *
+from ofa.utils import MyModule
+from ofa.imagenet_classification.networks import MobileNetV3
 
 
 class MobileInvertedResidualBlock(MyModule):
@@ -84,7 +85,7 @@ class NSGANetV2(MobileNetV3):
     def zero_last_gamma(self):
         for m in self.modules():
             if isinstance(m, MobileInvertedResidualBlock):
-                if isinstance(m.mobile_inverted_conv, MBInvertedConvLayer) and isinstance(m.shortcut, IdentityLayer):
+                if isinstance(m.mobile_inverted_conv, MBConvLayer) and isinstance(m.shortcut, IdentityLayer):
                     m.mobile_inverted_conv.point_linear.bn.weight.data.zero_()
 
     @staticmethod
@@ -98,7 +99,7 @@ class NSGANetV2(MobileNetV3):
         blocks = []
         for stage_id, block_config_list in cfg.items():
             for k, mid_channel, out_channel, use_se, act_func, stride, expand_ratio in block_config_list:
-                mb_conv = MBInvertedConvLayer(
+                mb_conv = MBConvLayer(
                     feature_dim, out_channel, k, stride, expand_ratio, mid_channel, act_func, use_se
                 )
                 if stride == 1 and out_channel == feature_dim:

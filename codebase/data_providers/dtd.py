@@ -2,14 +2,15 @@ import os
 import warnings
 import numpy as np
 
-from timm.data.transforms import _pil_interp
+from timm.data.transforms import str_to_pil_interp
 from timm.data.auto_augment import rand_augment_transform
 
 import torch.utils.data
 import torchvision.transforms as transforms
 import torchvision.datasets as datasets
 
-from ofa.imagenet_codebase.data_providers.base_provider import DataProvider, MyRandomResizedCrop, MyDistributedSampler
+from ofa.utils.my_dataloader import MyRandomResizedCrop, MyDistributedSampler
+from ofa.imagenet_classification.data_providers.base_provider import DataProvider
 
 
 class DTDDataProvider(DataProvider):
@@ -28,7 +29,7 @@ class DTDDataProvider(DataProvider):
         self._valid_transform_dict = {}
         if not isinstance(self.image_size, int):
             assert isinstance(self.image_size, list)
-            from ofa.imagenet_codebase.data_providers.my_data_loader import MyDataLoader
+            from ofa.utils.my_dataloader import MyDataLoader
             self.image_size.sort()  # e.g., 160 -> 224
             MyRandomResizedCrop.IMAGE_SIZE_LIST = self.image_size.copy()
             MyRandomResizedCrop.ACTIVE_SIZE = max(self.image_size)
@@ -177,7 +178,7 @@ class DTDDataProvider(DataProvider):
             img_mean=tuple([min(255, round(255 * x)) for x in [0.5329876098715876, 0.474260843249454,
                                                                0.42627281899380676]]),
         )
-        aa_params['interpolation'] = _pil_interp('bicubic')
+        aa_params['interpolation'] = str_to_pil_interp('bicubic')
         train_transforms += [rand_augment_transform(auto_augment, aa_params)]
 
         # if color_transform is not None:

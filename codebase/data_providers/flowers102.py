@@ -9,7 +9,8 @@ import torch.utils.data
 import torchvision.transforms as transforms
 import torchvision.datasets as datasets
 
-from ofa.imagenet_codebase.data_providers.base_provider import DataProvider, MyRandomResizedCrop, MyDistributedSampler
+from ofa.utils.my_dataloader import MyRandomResizedCrop, MyDistributedSampler
+from ofa.imagenet_classification.data_providers.base_provider import DataProvider
 
 
 class Flowers102DataProvider(DataProvider):
@@ -28,7 +29,7 @@ class Flowers102DataProvider(DataProvider):
         self._valid_transform_dict = {}
         if not isinstance(self.image_size, int):
             assert isinstance(self.image_size, list)
-            from ofa.imagenet_codebase.data_providers.my_data_loader import MyDataLoader
+            from ofa.utils.my_dataloader import MyDataLoader
             self.image_size.sort()  # e.g., 160 -> 224
             MyRandomResizedCrop.IMAGE_SIZE_LIST = self.image_size.copy()
             MyRandomResizedCrop.ACTIVE_SIZE = max(self.image_size)

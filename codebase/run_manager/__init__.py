@@ -6,7 +6,7 @@ from codebase.data_providers.dtd import *
 from codebase.data_providers.pets import *
 from codebase.data_providers.aircraft import *
 
-from ofa.imagenet_codebase.run_manager.run_manager import *
+from ofa.imagenet_classification.run_manager.run_config import RunConfig
 
 
 class ImagenetRunConfig(RunConfig):

@@ -5,14 +5,15 @@ import math
 import warnings
 import numpy as np
 
-from timm.data.transforms import _pil_interp
+from timm.data.transforms import str_to_pil_interp
 from timm.data.auto_augment import rand_augment_transform
 
 import torch.utils.data
 import torchvision.transforms as transforms
 from torchvision.datasets.folder import default_loader
 
-from ofa.imagenet_codebase.data_providers.base_provider import DataProvider, MyRandomResizedCrop, MyDistributedSampler
+from ofa.utils.my_dataloader import MyRandomResizedCrop, MyDistributedSampler
+from ofa.imagenet_classification.data_providers.base_provider import DataProvider
 
 
 def make_dataset(dir, image_ids, targets):
@@ -334,7 +335,7 @@ class FGVCAircraftDataProvider(DataProvider):
             img_mean=tuple([min(255, round(255 * x)) for x in [0.48933587508932375, 0.5183537408957618,
                                                                0.5387914411673883]]),
         )
-        aa_params['interpolation'] = _pil_interp('bicubic')
+        aa_params['interpolation'] = str_to_pil_interp('bicubic')
         train_transforms += [rand_augment_transform(auto_augment, aa_params)]
 
         # if color_transform is not None:
